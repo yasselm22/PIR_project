@@ -22,10 +22,5 @@ with {
     highPass = resonator : fi.highpass(3, 500) * 1.5;
     filteredSound = lowPass * (1.0 - tone) + highPass * tone;
 
-    saturation(x) = select2(abs(x) > 1.0, 
-                           x, 
-                           ma.signum(x) * (1.0 - (1.0/(abs(x) + 0.33))));
-
-
-    bd808 = filteredSound * level * 4 : ma.tanh * 0.7;
+    bassdrum = filteredSound * level * 4 : ma.tanh * 0.7;
 };
