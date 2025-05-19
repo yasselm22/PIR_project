@@ -10,7 +10,7 @@ process = ["Auto LFO Rate":*((os.osc(0.5)+1)/2), "Auto LFO Depth":*((os.osc(0.5)
 
 //process = flanger329(1);
 
-flanger329(n) = hgroup("%n.329_PHASE_FLANGE", ba.bypass2(bypass, par(i, 2, flanger_core)))
+flanger329(n) = hgroup("%n.329_FLANGER", ba.bypass2(bypass, par(i, 2, flanger_core)))
 with {
   
     // UI
