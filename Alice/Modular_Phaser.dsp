@@ -10,23 +10,31 @@ import("stdfaust.lib");
 process = ["Auto LFO Rate":*((os.osc(0.5)+1)/2), "Auto LFO Depth":*((os.osc(0.5)+1)/2),  "Auto Feedback":*((os.osc(0.5)+1)/2), "Auto Mix":*((os.osc(0.5)+1)/2), "Auto ModRange":*((os.osc(0.5)+1)/2) -> phaser329(1)];
 // process = phaser329(1);
 
-phaser329(n) = hgroup("%n.329_PHASER10", ba.bypass2(bypass, par(i, 2, phaser_core)))
+phaser329(n) = vgroup("%n.329_PHASER10", ba.bypass2(bypass, par(i, 2, phaser_core)))
 with {
-    // Manual controls
-    lfoRate_m   = hslider("[1] LFO Rate [unit:Hz] [style:knob]", 0.2, 0.01, 10.0, 0.01);
-    lfoDepth_m  = hslider("[2] LFO Depth [style:knob]", 0.7, 0, 1, 0.01);
-    feedback_m  = hslider("[3] Feedback [style:knob]", 0.3, 0, 0.99, 0.01);
-    mix_m       = hslider("[4] Mix Dry/Wet [style:knob]", 0.5, 0, 1, 0.01);
-    modRange_m  = hslider("[5] Modulation Range [unit:Hz] [style:knob]", 300, 0, 1000, 1);
-    outLevel = hslider("[6] Output Level [unit:dB] [style:knob]", 0, -60, 10, 0.1) : ba.db2linear : si.smoo;
-    bypass   = checkbox("[7] Bypass [tooltip: Désactive le module]");
 
+    pots_group(x) = hgroup("[1] Contrôles Manuels", x);
+    // Manual controls
+    lfoRate_m   = pots_group(hslider("[1] LFO Rate [unit:Hz] [style:knob]", 0.2, 0.01, 10.0, 0.01));
+    lfoDepth_m  = pots_group(hslider("[2] LFO Depth [style:knob]", 0.7, 0, 1, 0.01));
+    feedback_m  = pots_group(hslider("[3] Feedback [style:knob]", 0.3, 0, 0.99, 0.01));
+    mix_m       = pots_group(hslider("[4] Mix Dry/Wet [style:knob]", 0.5, 0, 1, 0.01));
+    modRange_m  = pots_group(hslider("[5] Modulation Range [unit:Hz] [style:knob]", 300, 0, 1000, 1));
+    outLevel    = pots_group(hslider("[6] Output Level [unit:dB] [style:knob]", 0, -60, 10, 0.1)) : ba.db2linear : si.smoo;
+
+
+
+
+    
+    checks_group(x) = hgroup("[2] Modes Auto", x);
     // Auto-mode switches
-    autoRate    = checkbox("[A1] Auto LFO Rate");
-    autoDepth   = checkbox("[A2] Auto LFO Depth");
-    autoFB      = checkbox("[A3] Auto Feedback");
-    autoMix     = checkbox("[A4] Auto Mix");
-    autoModR    = checkbox("[A5] Auto ModRange");
+    autoRate = checks_group(checkbox("[A1] Auto LFO Rate"));
+    autoDepth = checks_group(checkbox("[A2] Auto LFO Depth"));
+    autoFB = checks_group(checkbox("[A3] Auto Feedback"));
+    autoMix = checks_group(checkbox("[A4] Auto Mix"));
+    autoModR = checks_group(checkbox("[A5] Auto ModRange"));
+
+    bypass   = checks_group(checkbox("[A6] Bypass [tooltip: Désactive le module]"));
 
     // Contrôle automatique via oscillateurs
     lfoRate_a = (os.osc(0.03) + 1)/2 * (10.0 - 0.01) + 0.01 : si.smoo;      // 0.01 – 10 Hz
