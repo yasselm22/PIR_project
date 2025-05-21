@@ -1,14 +1,14 @@
 import("stdfaust.lib");
-freq_a_osc = os.osc(0.02)*1000 + 1000;
+freq_a_osc = os.osc(0.02)*100 + 320;
 
-process = ["Weird Freq A" : freq_a_osc -> wsg];
+process = ["Weird Freq A" : freq_a_osc -> wsg] * hslider("Master volume", 0.5, 0, 1, 0.01);
 
 wsg = vgroup("Weird Sound Generator", (voice_a*0.5+voice_b*0.5) : filter) with {
     //─────────VOICE A─────────
-    wacky_a_freq = hslider("h:[0]WSG/v:[0]VOICE A/[style:knob][0]Wacky Freq A", 440, 0, 4000, 1) : si.smoo;
+    wacky_a_freq = hslider("h:[0]WSG/v:[0]VOICE A/[style:knob][0]Wacky Freq A", 330, 0, 4000, 1) : si.smoo;
     zany_a_freq = hslider("h:[0]WSG/v:[0]VOICE A/[style:knob][0]Zany Freq", 2, 0.00, 20, 0.001) : si.smoo;
     zaniness_a = hslider("h:[0]WSG/v:[0]VOICE A/[style:knob][0]Zaziness", 0, 0.0, 1.0, 0.01) : si.smoo;
-    weird_a_freq = hslider("h:[0]WSG/v:[0]VOICE A/[style:knob][0]Weird Freq A", 440, 0, 2500, 1) : si.smoo;
+    weird_a_freq = hslider("h:[0]WSG/v:[0]VOICE A/[style:knob][0]Weird Freq A", 330, 0, 2500, 1) : si.smoo;
     wackiness_a = checkbox("h:[0]WSG/v:[1]VOICE A/Wackiness");
     wacky_too_a = checkbox("h:[0]WSG/v:[1]VOICE A/Wacky too");
     unusual_a = checkbox("h:[0]WSG/v:[1]VOICE A/unusual");
@@ -27,10 +27,10 @@ wsg = vgroup("Weird Sound Generator", (voice_a*0.5+voice_b*0.5) : filter) with {
     voice_a = weird_a_osc*select2(wackiness_a, 1, wacky_gate_a) + wacky_a*wacky_too_a;
 
     //─────────VOICE B─────────
-    wacky_b_freq = hslider("h:[0]WSG/v:[1]VOICE B/[style:knob][0]Wacky Freq", 440, 0, 4000, 1) : si.smoo;
+    wacky_b_freq = hslider("h:[0]WSG/v:[1]VOICE B/[style:knob][0]Wacky Freq", 220, 0, 4000, 1) : si.smoo;
     zany_b_freq = hslider("h:[0]WSG/v:[1]VOICE B/[style:knob][0]Zany Freq", 2, 0, 20, 0.001) : si.smoo;
     zaniness_b= hslider("h:[0]WSG/v:[1]VOICE B/[style:knob][0]Zaziness", 0, 0.0, 1, 0.01) : si.smoo;
-    weird_b_freq = hslider("h:[0]WSG/v:[1]VOICE B/[style:knob][0]Weird Freq", 440, 0, 2500, 1) : si.smoo;
+    weird_b_freq = hslider("h:[0]WSG/v:[1]VOICE B/[style:knob][0]Weird Freq", 220, 0, 2500, 1) : si.smoo;
     wackiness_b = checkbox("h:[0]WSG/v:[0]VOICE B/Wackiness");
     wacky_too_b = checkbox("h:[0]WSG/v:[0]VOICE B/Wacky too");
     unusual_b = checkbox("h:[0]WSG/v:[0]VOICE B/unusual");
