@@ -21,11 +21,8 @@ with {
     mix_m       = pots_group(hslider("[4] Mix Dry/Wet [style:knob]", 0.5, 0, 1, 0.01));
     modRange_m  = pots_group(hslider("[5] Modulation Range [unit:Hz] [style:knob]", 300, 0, 1000, 1));
     outLevel    = pots_group(hslider("[6] Output Level [unit:dB] [style:knob]", 0, -60, 10, 0.1)) : ba.db2linear : si.smoo;
+    bypass   = pots_group(checkbox("[A6] Bypass [tooltip: Désactive le module]"));
 
-
-
-
-    
     checks_group(x) = hgroup("[2] Modes Auto", x);
     // Auto-mode switches
     autoRate = checks_group(checkbox("[A1] Auto LFO Rate"));
@@ -34,7 +31,6 @@ with {
     autoMix = checks_group(checkbox("[A4] Auto Mix"));
     autoModR = checks_group(checkbox("[A5] Auto ModRange"));
 
-    bypass   = checks_group(checkbox("[A6] Bypass [tooltip: Désactive le module]"));
 
     // Contrôle automatique via oscillateurs
     lfoRate_a = (os.osc(0.03) + 1)/2 * (10.0 - 0.01) + 0.01 : si.smoo;      // 0.01 – 10 Hz
