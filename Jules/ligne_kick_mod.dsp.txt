@@ -1,0 +1,47 @@
+import("stdfaust.lib");
+
+// =============== PHASOR IMPLEMENTATION ===============
+phasor(freq) = freq/ma.SR : (+ : ma.frac) ~ _;
+
+// =============== PHASE RESET UTIL ===============
+impulse_on_gate(gate) = gate : ba.impulsify <: de.delay(0.001); // impulsion brève
+
+// =============== TRIANGLE RESETTABLE ===============
+triangle_from_saw(x) = 2 * abs(2 * x - 1) - 1;
+
+triangle_reset_once(freq, reset) =
+    os.lf_sawpos_phase_reset(freq, 0.75, reset) : triangle_from_saw;
+
+// =============== LFO MODULATION ===============
+// LFO basse fréquence pour modulation
+freq = (os.osc(0.1) + 1) * 65 + 20;
+release = (os.osc(0.15) + 1) * 990 + 20;
+
+// =============== UI CONTROLS ===============
+bpm = vslider("[1] BPM[style:slider][unit:BPM]", 140, 60, 200, 1);
+volume = vslider("volume", 0.8, 0, 1, 0.01);
+filter_impact = nentry("[2] Filter impact[style:knob]", 0.5, 0, 1, 0.01);
+run = checkbox("run");
+
+// =============== CLOCK ===============
+clock = run & (phasor(bpm / 60) < 0.5);
+
+// =============== KICK SYNTH ===============
+kick = triangle_reset_once(freq, impulse_on_gate(clock))
+    * en.ahdsre(
+        0.1, 5, 25, 0.5,
+        release / 1000,
+        clock
+    )
+    // Mix brut / filtré avec contrôle d'impact
+    : (_ <: _, fi.resonlp(200, 0.7, 0.5))
+    :> *(1.0 - filter_impact), *(filter_impact)
+    : +
+    : * (1 + 1.7*filter_impact);
+
+// =============== FINAL MIX ===============
+process = hgroup("TeknoKick with LFO Modulation",
+    kick * volume
+    : fi.peak_eq(0, 100, 5)
+    <: _,_
+);
